@@ -18,7 +18,7 @@ const Login = (props) => {
     const getId = setTimeout(() => {
       setFormIsValid(
         enteredEmail.includes("@") &&
-          enteredCollegeName.trim().length > 0 &&
+          enteredCollegeName.trim().length > 4 &&
           enteredPassword.trim().length > 6
       );
     }, 100);
@@ -48,7 +48,7 @@ const Login = (props) => {
 
   // new added function
   const validateCollegeNameHandler = () => {
-    setCollegeNameIsValid(enteredCollegeName.trim().length > 0);
+    setCollegeNameIsValid(enteredCollegeName.trim().length > 4);
   };
 
   const validatePasswordHandler = () => {
