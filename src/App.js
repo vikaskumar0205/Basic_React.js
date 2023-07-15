@@ -14,7 +14,7 @@ function App() {
     if (getData === "1") setIsLoggedIn(true);
   }, [isLoggedIn]);
 
-  const loginHandler = (email, password) => { 
+  const loginHandler = (email, college_name, password) => { 
     // we are passing 1 for the login
     localStorage.setItem("isLoggedIn", '1');
     setIsLoggedIn(true);

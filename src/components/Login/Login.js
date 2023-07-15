@@ -7,16 +7,19 @@ import Button from "../UI/Button/Button";
 const Login = (props) => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = useState();
+  const [enteredCollegeName, setEnteredCollegeName] = useState("");
+  const [collegeNameIsValid, setCollegeNameIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
-
 
   // Using useEffect we can check the conditions for the email and password in one function.
   useEffect(() => {
     const getId = setTimeout(() => {
       setFormIsValid(
-        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+        enteredEmail.includes("@") &&
+          enteredCollegeName.trim().length > 0 &&
+          enteredPassword.trim().length > 6
       );
     }, 100);
 
@@ -24,10 +27,15 @@ const Login = (props) => {
     return () => {
       clearTimeout(getId);
     };
-  }, [enteredEmail, enteredPassword]);
+  }, [enteredEmail, enteredCollegeName, enteredPassword]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
+  };
+
+  // new added function
+  const collegeNameChangeHandler = (event) => {
+    setEnteredCollegeName(event.target.value);
   };
 
   const passwordChangeHandler = (event) => {
@@ -38,13 +46,18 @@ const Login = (props) => {
     setEmailIsValid(enteredEmail.includes("@"));
   };
 
+  // new added function
+  const validateCollegeNameHandler = () => {
+    setCollegeNameIsValid(enteredCollegeName.trim().length > 0);
+  };
+
   const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(enteredEmail, enteredCollegeName, enteredPassword);
   };
 
   return (
@@ -64,6 +77,22 @@ const Login = (props) => {
             onBlur={validateEmailHandler}
           />
         </div>
+
+        <div
+          className={`${classes.control} ${
+            collegeNameIsValid === false ? classes.invalid : ""
+          }`}
+        >
+          <label htmlFor="college_name">College Name</label>
+          <input
+            type="text"
+            id="college_name"
+            value={enteredCollegeName}
+            onChange={collegeNameChangeHandler}
+            onBlur={validateCollegeNameHandler}
+          ></input>
+        </div>
+
         <div
           className={`${classes.control} ${
             passwordIsValid === false ? classes.invalid : ""
