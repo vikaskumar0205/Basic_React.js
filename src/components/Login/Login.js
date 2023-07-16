@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer,useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../../auth-context";
 
+// Reducer functions
 const emailReducer = (state, action) => {
   // state means=> prevState
   // action means=> targeted state
@@ -43,7 +45,11 @@ const passwordReducer = (state, action) => {
   return { value: "", invalid: false };
 };
 
-const Login = (props) => {
+const Login = () => {
+
+  // storing the context in variable
+  const ctx = useContext(AuthContext);
+
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [emailIsValid, setEmailIsValid] = useState();
   // const [enteredCollegeName, setEnteredCollegeName] = useState("");
@@ -66,21 +72,22 @@ const Login = (props) => {
     isValid: false,
   });
 
+  // more optimization by passing the dependencies as an isValid;
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: collegeNameIsValid } = collegeNameState;
+  const { isValid: passwordIsValid } = passwordState;
+
   // Using useEffect we can check the conditions for the email and password in one function.
   useEffect(() => {
     const getId = setTimeout(() => {
-      setFormIsValid(
-        emailState.value.includes("@") &&
-          collegeNameState.value.trim().length > 4 &&
-          passwordState.value.trim().length > 6
-      );
+      setFormIsValid(emailIsValid && collegeNameIsValid && passwordIsValid);
     }, 100);
 
     //
     return () => {
       clearTimeout(getId);
     };
-  }, [emailState, collegeNameState, passwordState]);
+  }, [emailIsValid, collegeNameIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
@@ -100,32 +107,23 @@ const Login = (props) => {
 
   const validateEmailHandler = () => {
     // setEmailIsValid(emailState.includes("@"));
-    dispatchedEmail({
-      type: "USER_BLUR",
-      isValid: emailState.value.includes("@"),
-    });
+    dispatchedEmail({ type: "USER_BLUR" });
   };
 
   // new added function
   const validateCollegeNameHandler = () => {
     // setCollegeNameIsValid(collegeNameState.trim().length > 4);
-    dispatchedCollefeName({
-      type: "USER_BLUR",
-      isValid: collegeNameState.value.trim().length > 4,
-    });
+    dispatchedCollefeName({ type: "USER_BLUR" });
   };
 
   const validatePasswordHandler = () => {
     // setPasswordIsValid(passwordState.trim().length > 6);
-    dispatchedPassword({
-      type: "USER_BLUR",
-      isValid: passwordState.value.trim().length > 6,
-    });
+    dispatchedPassword({ type: "USER_BLUR" });
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(
+    ctx.onLogin(
       emailState.value,
       collegeNameState.value,
       passwordState.value
@@ -137,7 +135,7 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailState.isValid === false ? classes.isValid : ""
+            emailIsValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -152,7 +150,7 @@ const Login = (props) => {
 
         <div
           className={`${classes.control} ${
-            collegeNameState.isValid === false ? classes.isValid : ""
+            collegeNameIsValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="college_name">College Name</label>
@@ -167,7 +165,7 @@ const Login = (props) => {
 
         <div
           className={`${classes.control} ${
-            passwordState.isValid === false ? classes.isValid : ""
+            passwordIsValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="password">Password</label>

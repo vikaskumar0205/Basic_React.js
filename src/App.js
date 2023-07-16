@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
+import AuthContext from "./auth-context";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,26 +15,32 @@ function App() {
     if (getData === "1") setIsLoggedIn(true);
   }, [isLoggedIn]);
 
-  const loginHandler = (email, college_name, password) => { 
+  const loginHandler = (email, college_name, password) => {
     // we are passing 1 for the login
-    localStorage.setItem("isLoggedIn", '1');
+    localStorage.setItem("isLoggedIn", "1");
     setIsLoggedIn(true);
   };
 
   const logoutHandler = () => {
     // we are passing 0 for the logout
-    localStorage.setItem("isLoggedIn", '0');
+    localStorage.setItem("isLoggedIn", "0");
     setIsLoggedIn(false);
   };
 
   return (
-    <React.Fragment>
-      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: isLoggedIn,
+        onLogout:  logoutHandler,
+        onLogin:loginHandler
+      }}
+    >
+      <MainHeader />
       <main>
-        {!isLoggedIn && <Login onLogin={loginHandler} />}
-        {isLoggedIn && <Home onLogout={logoutHandler} />}
+        {!isLoggedIn && <Login />}
+        {isLoggedIn && <Home />}
       </main>
-    </React.Fragment>
+    </AuthContext.Provider>
   );
 }
 
