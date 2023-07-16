@@ -25,11 +25,12 @@
 }
 
 .control input {
-  flex: 3;
+  flex:3.5;
   font: inherit;
   padding: 0.35rem 0.35rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+  /* background-color: #f6dbfc; */
 }
 
 .control input:focus {

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import classes from "./Navigation.module.css";
-import AuthContext from "../../auth-context";
+import AuthContext from "../../ContextApi/AuthContext";
 
 const Navigation = () => {
   // store the value in ctx.

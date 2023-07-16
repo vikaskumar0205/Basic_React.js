@@ -3,7 +3,7 @@ import React, { useState, useEffect, useReducer,useContext } from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
-import AuthContext from "../../auth-context";
+import AuthContext from "../../ContextApi/AuthContext";
 
 // Reducer functions
 const emailReducer = (state, action) => {
@@ -61,15 +61,15 @@ const Login = () => {
   // using useReducer instead of useState
   const [emailState, dispatchedEmail] = useReducer(emailReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
   const [collegeNameState, dispatchedCollefeName] = useReducer(
     collegeNameReducer,
-    { value: "", isValid: false }
+    { value: "", isValid: null }
   );
   const [passwordState, dispatchedPassword] = useReducer(passwordReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   // more optimization by passing the dependencies as an isValid;
@@ -83,7 +83,7 @@ const Login = () => {
       setFormIsValid(emailIsValid && collegeNameIsValid && passwordIsValid);
     }, 100);
 
-    //
+    // CleanUp function(take it as important)
     return () => {
       clearTimeout(getId);
     };
@@ -135,7 +135,7 @@ const Login = () => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.isValid : ""
+            emailState.isValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -150,7 +150,7 @@ const Login = () => {
 
         <div
           className={`${classes.control} ${
-            collegeNameIsValid === false ? classes.isValid : ""
+            collegeNameState.isValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="college_name">College Name</label>
@@ -165,7 +165,7 @@ const Login = () => {
 
         <div
           className={`${classes.control} ${
-            passwordIsValid === false ? classes.isValid : ""
+            passwordState.isValid === false ? classes.isValid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
